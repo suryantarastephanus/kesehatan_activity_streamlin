@@ -9,44 +9,88 @@ from datetime import datetime, date
 
 st.set_page_config(page_title="Dashboard Kesehatan Om Stan", layout="wide", page_icon="🩺")
 
+# Load environment (.env.local / .env)
+def load_local_env():
+    for fname in [".env.local", ".env"]:
+        env_path = os.path.join(os.path.dirname(__file__), fname)
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k not in os.environ:
+                            os.environ[k] = v
+
+load_local_env()
+
+# ==========================================
+# 🔒 PIN PROTECTION GATE
+# ==========================================
+def check_pin_auth():
+    if st.session_state.get("authenticated", False):
+        return True
+
+    valid_pin = os.environ.get("DASHBOARD_PIN", "1123")
+    if hasattr(st, "secrets") and "DASHBOARD_PIN" in st.secrets:
+        valid_pin = str(st.secrets["DASHBOARD_PIN"])
+
+    _, center_col, _ = st.columns([1, 1.2, 1])
+    with center_col:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="text-align: center; padding: 25px 20px; border-radius: 12px; background: #1E293B; border: 1px solid #334155; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div style="font-size: 3.5rem; margin-bottom: 5px;">🔒</div>
+            <h2 style="margin: 0; color: #F8FAFC; font-size: 1.5rem;">Dashboard Terproteksi</h2>
+            <p style="color: #94A3B8; font-size: 0.9rem; margin-top: 6px;">Masukkan PIN untuk membuka Dashboard Kesehatan Om Stan</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        with st.form("pin_login_form"):
+            entered_pin = st.text_input("PIN Akses", type="password", max_chars=6, placeholder="••••", label_visibility="collapsed")
+            submit_btn = st.form_submit_button("Masuk ke Dashboard 🚀", width="stretch")
+            
+            if submit_btn:
+                if entered_pin.strip() == str(valid_pin).strip():
+                    st.session_state["authenticated"] = True
+                    st.success("✅ PIN Benar. Membuka dashboard...")
+                    st.rerun()
+                else:
+                    st.error("❌ PIN salah! Silakan coba lagi.")
+
+    return False
+
+if not check_pin_auth():
+    st.stop()
+
+# Sidebar: Akun & Keamanan
+with st.sidebar:
+    st.markdown("### 🩺 Om Stan")
+    st.caption("Status: **Terverifikasi** 🟢")
+    st.caption("Database: **Neon Cloud PostgreSQL** ☁️")
+    st.divider()
+    if st.button("🔒 Kunci / Logout", width="stretch"):
+        st.session_state["authenticated"] = False
+        st.rerun()
+
 # DB Connection (Prioritaskan Neon Cloud / DATABASE_URL)
 def get_connection():
-    # 1. Cek dari environment
     db_url = os.environ.get("DATABASE_URL")
-    
-    # 2. Cek Streamlit secrets jika ada
-    if not db_url:
-        try:
-            if hasattr(st, "secrets") and "DATABASE_URL" in st.secrets:
-                db_url = st.secrets["DATABASE_URL"]
-        except Exception:
-            pass
+    if not db_url and hasattr(st, "secrets") and "DATABASE_URL" in st.secrets:
+        db_url = st.secrets["DATABASE_URL"]
 
-    # 3. Cek file .env.local atau .env jika belum ada di env
-    if not db_url:
-        for fname in [".env.local", ".env"]:
-            env_path = os.path.join(os.path.dirname(__file__), fname)
-            if os.path.exists(env_path):
-                with open(env_path, "r", encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
-                        if line.startswith("DATABASE_URL="):
-                            db_url = line.split("=", 1)[1].strip().strip('"').strip("'")
-                            break
-            if db_url:
-                break
-
-    # 4. Konek ke Neon Cloud jika URL tersedia
     if db_url:
         return psycopg2.connect(db_url)
 
-    # 5. Fallback ke DB Lokal jika tidak ada Neon URL
     return psycopg2.connect(
-        host="127.0.0.1",
-        port=5432,
-        user="postgres",
-        password="PGpass#2026",
-        dbname="kesehatan_db"
+        host=os.environ.get("DB_HOST", "127.0.0.1"),
+        port=int(os.environ.get("DB_PORT", 5432)),
+        user=os.environ.get("DB_USER", "postgres"),
+        password=os.environ.get("DB_PASSWORD", "PGpass#2026"),
+        dbname=os.environ.get("DB_NAME", "kesehatan_db")
     )
 
 @st.cache_data(ttl=5)
