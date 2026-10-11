@@ -264,6 +264,14 @@ html, body, [class*="css"] {
     padding: 18px;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
 }
+
+/* Plotly White Canvas Styling */
+.stPlotlyChart {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
 </style>
 """
 st.markdown(DESKTOP_CSS, unsafe_allow_html=True)
@@ -595,26 +603,26 @@ with left_panel:
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    # Target Band Shapes (Green / Amber / Red)
+    # Target Band Shapes (Green / Amber / Red) with clear contrast on white canvas
     fig.add_hrect(
         y0=70, y1=140,
-        fillcolor="#10B981", opacity=0.07, line_width=0,
+        fillcolor="#10B981", opacity=0.14, line_width=0,
         annotation_text="🟢 Zona Ideal (70–140 mg/dL)", annotation_position="top left",
-        annotation_font=dict(color="#10B981", size=10),
+        annotation_font=dict(color="#065F46", size=10, family="Plus Jakarta Sans"),
         secondary_y=False
     )
     fig.add_hrect(
         y0=140, y1=200,
-        fillcolor="#F59E0B", opacity=0.07, line_width=0,
+        fillcolor="#F59E0B", opacity=0.12, line_width=0,
         annotation_text="🟡 Zona Perhatian (140–200)", annotation_position="top left",
-        annotation_font=dict(color="#F59E0B", size=10),
+        annotation_font=dict(color="#92400E", size=10, family="Plus Jakarta Sans"),
         secondary_y=False
     )
     fig.add_hrect(
         y0=200, y1=380,
-        fillcolor="#EF4444", opacity=0.07, line_width=0,
+        fillcolor="#EF4444", opacity=0.10, line_width=0,
         annotation_text="🔴 Zona Waspada (>200)", annotation_position="top left",
-        annotation_font=dict(color="#EF4444", size=10),
+        annotation_font=dict(color="#991B1B", size=10, family="Plus Jakarta Sans"),
         secondary_y=False
     )
 
@@ -630,8 +638,9 @@ with left_panel:
                 name="Gula Darah (mg/dL)",
                 text=[f"<b>{int(v)}</b>" for v in df_gds_sorted["nilai_mg_dl"]],
                 textposition="top center",
-                line=dict(color="#F43F5E", width=3, shape="spline"),
-                marker=dict(size=12, symbol="diamond", color="#F43F5E", line=dict(width=2, color="#FFFFFF")),
+                textfont=dict(color="#BE123C", size=11, family="JetBrains Mono"),
+                line=dict(color="#E11D48", width=3, shape="spline"),
+                marker=dict(size=12, symbol="diamond", color="#E11D48", line=dict(width=2, color="#FFFFFF")),
                 hovertemplate="<b>Waktu:</b> %{x}<br><b>GDS:</b> %{y} mg/dL<extra></extra>"
             ),
             secondary_y=False
@@ -649,7 +658,8 @@ with left_panel:
                     name="Insulin Rapid (Unit)",
                     text=[f"{int(d)} U" for d in df_ins["dosis_jumlah"]],
                     textposition="outside",
-                    marker_color="#38BDF8",
+                    textfont=dict(color="#0284C7", size=10, family="JetBrains Mono"),
+                    marker_color="#0284C7",
                     opacity=0.85,
                     width=0.22,
                     hovertemplate="<b>Waktu:</b> %{x}<br><b>Dosis:</b> %{y} Unit<extra></extra>"
@@ -669,16 +679,17 @@ with left_panel:
                 name="Sesi Makan",
                 text=[f"🍽️ {m} ({p})" for m, p in zip(df_food_sorted["menu"], df_food_sorted["porsi"])],
                 textposition="bottom center",
+                textfont=dict(color="#047857", size=10, family="Plus Jakarta Sans"),
                 marker=dict(size=15, color="#10B981", symbol="circle", line=dict(width=2, color="#FFFFFF")),
                 hovertemplate="<b>Waktu:</b> %{x}<br><b>Menu:</b> %{text}<extra></extra>"
             ),
             secondary_y=False
         )
 
-    # Desktop Chart Styling
+    # Desktop Chart Styling — White Clinical Canvas
     fig.update_layout(
-        plot_bgcolor="rgba(15, 23, 42, 0.45)",
-        paper_bgcolor="rgba(0, 0, 0, 0)",
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
         xaxis_title="Linimasa Kronologis",
         legend=dict(
             orientation="h",
@@ -686,26 +697,40 @@ with left_panel:
             y=1.02,
             xanchor="right",
             x=1,
-            font=dict(color="#94A3B8", size=11)
+            bgcolor="rgba(255, 255, 255, 0.95)",
+            bordercolor="#E2E8F0",
+            borderwidth=1,
+            font=dict(color="#0F172A", size=11, family="Plus Jakarta Sans")
         ),
         margin=dict(l=20, r=20, t=35, b=25),
         height=520,
-        hovermode="x unified"
+        hovermode="x unified",
+        hoverlabel=dict(bgcolor="#0F172A", font_color="#FFFFFF", font_size=12)
     )
-    fig.update_xaxes(showgrid=True, gridcolor="rgba(255, 255, 255, 0.05)", color="#94A3B8")
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="#E2E8F0",
+        color="#334155",
+        tickfont=dict(color="#475569", family="JetBrains Mono"),
+        title_font=dict(color="#1E293B", size=12)
+    )
     fig.update_yaxes(
         title_text="Gula Darah (mg/dL)",
         range=[40, 320],
         showgrid=True,
-        gridcolor="rgba(255, 255, 255, 0.05)",
-        color="#F43F5E",
+        gridcolor="#E2E8F0",
+        color="#BE123C",
+        tickfont=dict(color="#BE123C", family="JetBrains Mono"),
+        title_font=dict(color="#BE123C", size=12),
         secondary_y=False
     )
     fig.update_yaxes(
         title_text="Dosis Insulin Rapid (Unit)",
         range=[0, 45],
         showgrid=False,
-        color="#38BDF8",
+        color="#0284C7",
+        tickfont=dict(color="#0284C7", family="JetBrains Mono"),
+        title_font=dict(color="#0284C7", size=12),
         secondary_y=True
     )
 
