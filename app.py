@@ -6,11 +6,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 
-# ==========================================
-# ⚙️ STREAMLIT CONFIGURATION
-# ==========================================
+# ==============================================================================
+# 🩺 DASHBOARD KESEHATAN OM STAN — DESKTOP REMAKE
+# Dioptimalkan dengan prinsip:
+# - Visual Hierarchy, Law of Common Region, Data-ink ratio, Dark Mode Design
+# - UI/UX Pro Max Design Intelligence
+# ==============================================================================
+
 st.set_page_config(
-    page_title="Dashboard Kesehatan Om Stan",
+    page_title="Dashboard Kesehatan Om Stan — Executive Protocol",
     page_icon="🩺",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -33,135 +37,240 @@ def load_local_env():
 
 load_local_env()
 
-# ==========================================
-# 🎨 CUSTOM STYLING (UI/UX PRO MAX DESIGN)
-# ==========================================
-CUSTOM_CSS = """
+# ==============================================================================
+# 🎨 DESKTOP DESIGN SYSTEM & STYLING
+# ==============================================================================
+DESKTOP_CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* Typography & Root Variables */
+:root {
+    --bg-dark: #090D16;
+    --surface-1: #0F172A;
+    --surface-2: #1E293B;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-highlight: rgba(56, 189, 248, 0.25);
+    --accent-cyan: #06B6D4;
+    --accent-emerald: #10B981;
+    --accent-amber: #F59E0B;
+    --accent-rose: #F43F5E;
+    --accent-blue: #38BDF8;
+}
 
 html, body, [class*="css"] {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* Base theme tweaks */
-.main .block-container {
-    padding-top: 1.8rem;
-    padding-bottom: 2.5rem;
-    max-width: 1440px;
-}
-
-/* Glassmorphism Card Style */
-.metric-card {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 18px 20px;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(8px);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    height: 100%;
-}
-.metric-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(56, 189, 248, 0.3);
-}
-
-.metric-title {
-    color: #94A3B8;
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-}
-
-.metric-value {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
     color: #F8FAFC;
-    font-size: 1.9rem;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
 }
 
-.metric-unit {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #64748B;
-    margin-left: 4px;
+/* Maximize Desktop Layout */
+.main .block-container {
+    padding-top: 1.2rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 1600px;
 }
 
-.metric-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 10px;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.25);
     border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-top: 8px;
 }
-.badge-green { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
-.badge-amber { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
-.badge-red { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-.badge-blue { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
-.badge-purple { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); }
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.45);
+}
 
-/* Activity Feed Stream Item */
-.stream-item {
-    padding: 12px 14px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    background: rgba(30, 41, 59, 0.6);
-    border-left: 4px solid #3B82F6;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    border-right: 1px solid rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    transition: background 0.15s ease;
-}
-.stream-item:hover {
-    background: rgba(30, 41, 59, 0.85);
-}
-.stream-header {
+/* Desktop Header Bar */
+.desktop-header {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.8) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
-}
-.stream-time {
-    color: #94A3B8;
-    font-size: 0.78rem;
-    font-family: 'JetBrains Mono', monospace;
-}
-.stream-body {
-    color: #E2E8F0;
-    font-size: 0.92rem;
-    font-weight: 500;
-}
-.stream-note {
-    color: #64748B;
-    font-size: 0.8rem;
-    margin-top: 2px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
 }
 
-/* Subtle header banner */
-.hero-container {
-    background: linear-gradient(135deg, rgba(8, 145, 178, 0.15) 0%, rgba(30, 41, 59, 0.6) 100%);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+.profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 0 15px rgba(2, 132, 199, 0.35);
+}
+
+/* Primary Metric Cards */
+.metric-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border: 1px solid var(--border-subtle);
     border-radius: 16px;
-    padding: 22px 26px;
-    margin-bottom: 22px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+.metric-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-highlight);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    color: #94A3B8;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.metric-number {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #F8FAFC;
+    letter-spacing: -0.03em;
+    font-feature-settings: "tnum";
+}
+
+.metric-unit {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748B;
+    margin-left: 6px;
+}
+
+.metric-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+/* Status Badges */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.pill-emerald { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.35); }
+.pill-amber { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.35); }
+.pill-rose { background: rgba(244, 63, 94, 0.15); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+.pill-sky { background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.35); }
+.pill-purple { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.35); }
+
+/* Secondary Benchmark Strip */
+.benchmark-strip {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.benchmark-item {
+    text-align: center;
+}
+.benchmark-title {
+    color: #64748B;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+.benchmark-val {
+    color: #E2E8F0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Activity Feed Card */
+.feed-box {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 16px;
+}
+.feed-item {
+    background: rgba(15, 23, 42, 0.65);
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    border-left: 4px solid #38BDF8;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background 0.15s ease;
+}
+.feed-item:hover {
+    background: rgba(30, 41, 59, 0.85);
+}
+
+/* Chart Canvas Card */
+.chart-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.85) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
 }
 </style>
 """
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+st.markdown(DESKTOP_CSS, unsafe_allow_html=True)
 
-# ==========================================
+# ==============================================================================
 # 🔒 PIN PROTECTION GATE
-# ==========================================
+# ==============================================================================
 def check_pin_auth():
     if st.session_state.get("authenticated", False):
         return True
@@ -170,15 +279,17 @@ def check_pin_auth():
     if hasattr(st, "secrets") and "DASHBOARD_PIN" in st.secrets:
         valid_pin = str(st.secrets["DASHBOARD_PIN"])
 
-    _, center_col, _ = st.columns([1, 1.2, 1])
+    _, center_col, _ = st.columns([1, 1.1, 1])
     with center_col:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown("""
-        <div style="text-align: center; padding: 32px 24px; border-radius: 18px; background: linear-gradient(145deg, #1E293B, #0F172A); border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size: 3.2rem; margin-bottom: 10px;">🩺</div>
-            <h2 style="margin: 0; color: #F8FAFC; font-size: 1.55rem; font-weight: 700;">Dashboard Om Stan</h2>
-            <p style="color: #94A3B8; font-size: 0.9rem; margin-top: 6px; margin-bottom: 20px;">
-                Proteksi Medis &amp; Lifestyle — Masukkan PIN untuk membuka
+        <div style="text-align: center; padding: 36px 28px; border-radius: 20px; background: linear-gradient(145deg, #1E293B, #0F172A); border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 16px 36px rgba(0,0,0,0.55);">
+            <div style="width: 68px; height: 68px; margin: 0 auto 16px auto; border-radius: 18px; background: linear-gradient(135deg, #0284C7, #0369A1); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: 0 0 25px rgba(2, 132, 199, 0.4);">
+                🩺
+            </div>
+            <h2 style="margin: 0; color: #F8FAFC; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;">Om Stan Health Protocol</h2>
+            <p style="color: #94A3B8; font-size: 0.92rem; margin-top: 8px; margin-bottom: 24px;">
+                Proteksi Akses Terpadu — Silakan masukkan PIN 4 digit untuk membuka dasbor.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -186,7 +297,7 @@ def check_pin_auth():
 
         with st.form("pin_login_form"):
             entered_pin = st.text_input("PIN Akses", type="password", max_chars=8, placeholder="Masukkan 4 digit PIN...", label_visibility="collapsed")
-            submit_btn = st.form_submit_button("Buka Dashboard 🚀", width="stretch")
+            submit_btn = st.form_submit_button("Buka Dasbor 🚀", width="stretch")
             
             if submit_btn:
                 if entered_pin.strip() == str(valid_pin).strip():
@@ -201,9 +312,9 @@ def check_pin_auth():
 if not check_pin_auth():
     st.stop()
 
-# ==========================================
+# ==============================================================================
 # 🗄️ DATABASE CONNECTION & DATA ACCESS
-# ==========================================
+# ==============================================================================
 def get_connection():
     db_url = os.environ.get("DATABASE_URL")
     if not db_url and hasattr(st, "secrets") and "DATABASE_URL" in st.secrets:
@@ -231,32 +342,37 @@ def load_data(table_name):
         st.error(f"Gagal memuat data `{table_name}`: {e}")
         return pd.DataFrame()
 
-# ==========================================
-# 📋 SIDEBAR & PROFILE CONTROL
-# ==========================================
+# ==============================================================================
+# 📋 SIDEBAR CONTROLS
+# ==============================================================================
 with st.sidebar:
     st.markdown("""
-    <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px;">
-        <h3 style="margin: 0; color: #F8FAFC; display: flex; align-items: center; gap: 8px;">
-            <span>🩺</span> Om Stan Profile
-        </h3>
-        <p style="color: #94A3B8; font-size: 0.8rem; margin: 4px 0 0 0;">Protokol Diabetes &amp; Nutrisi</p>
+    <div style="padding: 12px 0 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 1.8rem;">🩺</div>
+            <div>
+                <h3 style="margin: 0; color: #F8FAFC; font-size: 1.15rem; font-weight: 700;">Om Stan</h3>
+                <span style="color: #38BDF8; font-size: 0.78rem; font-weight: 600;">Protokol Glukosa &amp; Nutrisi</span>
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
-    st.caption("🟢 **Status:** Sesi Terverifikasi")
-    st.caption("☁️ **Database:** Neon PostgreSQL Cloud")
+    st.caption("🟢 **Status Sesi:** Terverifikasi")
+    st.caption("☁️ **Cloud Database:** Neon PostgreSQL")
     
     st.markdown("---")
-    st.markdown("#### 🎯 Filter Linimasa")
+    st.markdown("##### ⏱️ Rentang Linimasa")
     filter_range = st.selectbox(
-        "Rentang Waktu Tampilan",
+        "Pilih Periode Analisis",
         ["Semua Riwayat", "7 Hari Terakhir", "30 Hari Terakhir", "Hari Ini"],
-        index=0
+        index=0,
+        label_visibility="collapsed"
     )
 
     st.markdown("---")
-    if st.button("🔄 Segarkan Data (Refresh)", width="stretch"):
+    st.markdown("##### ⚙️ Aksi Cepat")
+    if st.button("🔄 Refresh Data", width="stretch"):
         st.cache_data.clear()
         st.rerun()
 
@@ -264,9 +380,9 @@ with st.sidebar:
         st.session_state["authenticated"] = False
         st.rerun()
 
-# ==========================================
-# 📊 LOAD & PREPARE DATASETS
-# ==========================================
+# ==============================================================================
+# 📊 LOAD DATASETS
+# ==============================================================================
 df_gds = load_data("gula_darah")
 df_meds = load_data("obat_insulin")
 df_food = load_data("makanan")
@@ -274,176 +390,235 @@ df_sport = load_data("olahraga")
 
 today = date.today()
 
-# Filter by selected time range
-def apply_time_filter(df, date_col="tanggal"):
+# Filter Data according to user selection
+def filter_dataframe_by_date(df, date_col="tanggal"):
     if df.empty or date_col not in df.columns:
         return df
     try:
-        temp_df = df.copy()
-        temp_df[date_col] = pd.to_datetime(temp_df[date_col]).dt.date
+        temp = df.copy()
+        temp[date_col] = pd.to_datetime(temp[date_col]).dt.date
         if filter_range == "Hari Ini":
-            return temp_df[temp_df[date_col] == today]
+            return temp[temp[date_col] == today]
         elif filter_range == "7 Hari Terakhir":
-            return temp_df[temp_df[date_col] >= (today - timedelta(days=7))]
+            return temp[temp[date_col] >= (today - timedelta(days=7))]
         elif filter_range == "30 Hari Terakhir":
-            return temp_df[temp_df[date_col] >= (today - timedelta(days=30))]
+            return temp[temp[date_col] >= (today - timedelta(days=30))]
         return df
     except Exception:
         return df
 
-df_gds_filtered = apply_time_filter(df_gds)
-df_meds_filtered = apply_time_filter(df_meds)
-df_food_filtered = apply_time_filter(df_food)
-df_sport_filtered = apply_time_filter(df_sport)
+df_gds_filtered = filter_dataframe_by_date(df_gds)
+df_meds_filtered = filter_dataframe_by_date(df_meds)
+df_food_filtered = filter_dataframe_by_date(df_food)
+df_sport_filtered = filter_dataframe_by_date(df_sport)
 
-# ==========================================
-# 🌟 HERO HEADER
-# ==========================================
+# ==============================================================================
+# 🌟 DESKTOP EXECUTIVE HEADER
+# ==============================================================================
 st.markdown(f"""
-<div class="hero-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+<div class="desktop-header">
+    <div class="profile-badge">
+        <div class="avatar-circle">🩺</div>
         <div>
-            <h1 style="color: #F8FAFC; margin: 0; font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em;">
-                Health &amp; Lifestyle Protocol
-            </h1>
-            <p style="color: #94A3B8; margin: 4px 0 0 0; font-size: 0.95rem;">
-                Monitoring Terpadu: Gula Darah, Insulin Rapid, Nutrisi, &amp; Olahraga
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <h1 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: #F8FAFC; letter-spacing: -0.02em;">
+                    Health &amp; Lifestyle Executive Protocol
+                </h1>
+                <span class="status-pill pill-sky">Cloud Sync Active</span>
+            </div>
+            <p style="margin: 4px 0 0 0; color: #94A3B8; font-size: 0.88rem;">
+                Monitoring Terpadu: Kurva Glukosa Darah, Injeksi Rapid, Asupan Nutrisi &amp; Kebugaran
             </p>
         </div>
-        <div style="text-align: right;">
-            <span style="background: rgba(8, 145, 178, 0.2); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 5px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;">
-                📅 {today.strftime("%A, %d %B %Y")}
-            </span>
-        </div>
+    </div>
+    <div style="text-align: right;">
+        <span style="background: rgba(15, 23, 42, 0.8); color: #E2E8F0; border: 1px solid rgba(255, 255, 255, 0.1); padding: 7px 14px; border-radius: 9999px; font-size: 0.82rem; font-weight: 600; font-family: 'JetBrains Mono', monospace;">
+            📅 {today.strftime("%A, %d %B %Y")}
+        </span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 📈 KEY PERFORMANCE METRIC CARDS
-# ==========================================
-m1, m2, m3, m4 = st.columns(4)
+# ==============================================================================
+# 🎯 PRIMARY METRIC TILES (4 DESKTOP COLUMNS)
+# ==============================================================================
+c1, c2, c3, c4 = st.columns(4)
 
-# 1. GDS Card
-with m1:
+# 1. GDS Primary Card
+with c1:
     if not df_gds.empty:
         latest_gds = int(df_gds.iloc[0]["nilai_mg_dl"])
         latest_tipe = str(df_gds.iloc[0]["tipe"])
+        latest_time = str(df_gds.iloc[0]["waktu"])[:5]
+        
         if latest_gds <= 140:
-            badge_class = "badge-green"
-            status_text = "✅ Ideal (70-140)"
+            pill_class, status_label = "pill-emerald", "✅ Zona Ideal"
         elif latest_gds <= 200:
-            badge_class = "badge-amber"
-            status_text = "⚠️ Perhatian (140-200)"
+            pill_class, status_label = "pill-amber", "⚠️ Perhatian"
         else:
-            badge_class = "badge-red"
-            status_text = "🚨 Waspada (>200)"
-            
+            pill_class, status_label = "pill-rose", "🚨 Zona Waspada"
+
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-title">🩸 Gula Darah Terakhir</div>
-            <div class="metric-value">{latest_gds}<span class="metric-unit">mg/dL</span></div>
-            <div>
-                <span class="metric-badge {badge_class}">{status_text}</span>
-                <span style="color: #94A3B8; font-size: 0.75rem; margin-left: 6px;">({latest_tipe})</span>
+            <div class="metric-header">
+                <span class="metric-label">🩸 Gula Darah Terakhir</span>
+                <span style="color: #64748B; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;">🕒 {latest_time}</span>
+            </div>
+            <div class="metric-number">{latest_gds}<span class="metric-unit">mg/dL</span></div>
+            <div class="metric-footer">
+                <span class="status-pill {pill_class}">{status_label}</span>
+                <span style="color: #94A3B8; font-size: 0.76rem; font-weight: 500;">{latest_tipe}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-title">🩸 Gula Darah Terakhir</div>
-            <div class="metric-value">-<span class="metric-unit">mg/dL</span></div>
-            <span class="metric-badge badge-blue">Belum ada data</span>
+            <div class="metric-header"><span class="metric-label">🩸 Gula Darah Terakhir</span></div>
+            <div class="metric-number">-<span class="metric-unit">mg/dL</span></div>
+            <div class="metric-footer"><span class="status-pill pill-sky">Belum Ada Data</span></div>
         </div>
         """, unsafe_allow_html=True)
 
-# 2. Insulin Card
-with m2:
+# 2. Insulin Primary Card
+with c2:
     if not df_meds.empty:
-        today_meds = df_meds[(df_meds["kategori"] == "Insulin")]
-        total_insulin = int(today_meds["dosis_jumlah"].sum()) if not today_meds.empty else 0
-        insulin_counts = len(today_meds) if not today_meds.empty else 0
+        today_ins = df_meds[df_meds["kategori"] == "Insulin"]
+        total_insulin = int(today_ins["dosis_jumlah"].sum()) if not today_ins.empty else 0
+        freq_insulin = len(today_ins) if not today_ins.empty else 0
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-title">💉 Insulin Rapid Hari Ini</div>
-            <div class="metric-value">{total_insulin}<span class="metric-unit">Unit</span></div>
-            <div>
-                <span class="metric-badge badge-blue">{insulin_counts}x Injeksi Terdata</span>
+            <div class="metric-header">
+                <span class="metric-label">💉 Total Insulin Rapid</span>
+                <span style="color: #38BDF8; font-size: 0.75rem; font-weight: 600;">{freq_insulin}x Injeksi</span>
+            </div>
+            <div class="metric-number">{total_insulin}<span class="metric-unit">Unit</span></div>
+            <div class="metric-footer">
+                <span class="status-pill pill-sky">Rapid Protocol</span>
+                <span style="color: #94A3B8; font-size: 0.76rem;">Suntik pre/post meal</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-title">💉 Insulin Rapid Hari Ini</div>
-            <div class="metric-value">0<span class="metric-unit">Unit</span></div>
-            <span class="metric-badge badge-blue">Belum ada dosis</span>
+            <div class="metric-header"><span class="metric-label">💉 Total Insulin Rapid</span></div>
+            <div class="metric-number">0<span class="metric-unit">Unit</span></div>
+            <div class="metric-footer"><span class="status-pill pill-sky">0 Injeksi Hari Ini</span></div>
         </div>
         """, unsafe_allow_html=True)
 
-# 3. Makanan Card
-with m3:
-    total_makan = len(df_food) if not df_food.empty else 0
+# 3. Nutrition Primary Card
+with c3:
+    total_meals = len(df_food) if not df_food.empty else 0
     st.markdown(f"""
     <div class="metric-card">
-        <div class="metric-title">🍽️ Sesi Makan Terdata</div>
-        <div class="metric-value">{total_makan}<span class="metric-unit">Sesi</span></div>
-        <div>
-            <span class="metric-badge badge-green">Protokol Rendah Gula</span>
+        <div class="metric-header">
+            <span class="metric-label">🍽️ Sesi Makan Terdata</span>
+            <span style="color: #34D399; font-size: 0.75rem; font-weight: 600;">Aktif</span>
+        </div>
+        <div class="metric-number">{total_meals}<span class="metric-unit">Sesi</span></div>
+        <div class="metric-footer">
+            <span class="status-pill pill-emerald">Low Carb Target</span>
+            <span style="color: #94A3B8; font-size: 0.76rem;">Serat &amp; Protein diutamakan</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-# 4. Target Berat Badan
-with m4:
-    st.markdown("""
+# 4. Target Body Weight & Metabolic Goal
+with c4:
+    total_sport_minutes = int(df_sport["durasi_menit"].sum()) if not df_sport.empty and "durasi_menit" in df_sport.columns else 0
+    st.markdown(f"""
     <div class="metric-card">
-        <div class="metric-title">🎯 Target Berat Badan</div>
-        <div class="metric-value">&lt; 90<span class="metric-unit">kg</span></div>
-        <div>
-            <span class="metric-badge badge-purple">Defisit &amp; Jalan Pagi</span>
+        <div class="metric-header">
+            <span class="metric-label">🎯 Target Berat Badan</span>
+            <span style="color: #C084FC; font-size: 0.75rem; font-weight: 600;">Defisit Kalori</span>
+        </div>
+        <div class="metric-number">&lt; 90<span class="metric-unit">kg</span></div>
+        <div class="metric-footer">
+            <span class="status-pill pill-purple">Jalan Pagi: {total_sport_minutes} mnt</span>
+            <span style="color: #94A3B8; font-size: 0.76rem;">Fokus Turun</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
+# ==============================================================================
+# 🩺 CLINICAL BENCHMARKS STRIP (Calculated Insights)
+# ==============================================================================
+if not df_gds.empty:
+    avg_gds = round(float(df_gds["nilai_mg_dl"].mean()), 1)
+    # Formula Estimasi HbA1c: (Avg Glucose + 46.7) / 28.7
+    est_a1c = round((avg_gds + 46.7) / 28.7, 1)
+    
+    # Time in Range (70-140 mg/dL)
+    tir_count = len(df_gds[(df_gds["nilai_mg_dl"] >= 70) & (df_gds["nilai_mg_dl"] <= 140)])
+    tir_percentage = round((tir_count / len(df_gds)) * 100, 1)
+    
+    min_gds = int(df_gds["nilai_mg_dl"].min())
+    max_gds = int(df_gds["nilai_mg_dl"].max())
+else:
+    avg_gds, est_a1c, tir_percentage, min_gds, max_gds = 0, 0, 0, 0, 0
 
-# ==========================================
-# 📊 INTERACTIVE DUAL-AXIS TIMELINE & STREAM
-# ==========================================
-col_chart, col_stream = st.columns([7, 3])
+st.markdown(f"""
+<div class="benchmark-strip">
+    <div class="benchmark-item">
+        <div class="benchmark-title">Rata-Rata GDS</div>
+        <div class="benchmark-val" style="color: #38BDF8;">{avg_gds} <small style="font-size: 0.7rem;">mg/dL</small></div>
+    </div>
+    <div style="height: 28px; width: 1px; background: rgba(255,255,255,0.08);"></div>
+    <div class="benchmark-item">
+        <div class="benchmark-title">Estimasi HbA1c</div>
+        <div class="benchmark-val" style="color: #FBBF24;">{est_a1c}%</div>
+    </div>
+    <div style="height: 28px; width: 1px; background: rgba(255,255,255,0.08);"></div>
+    <div class="benchmark-item">
+        <div class="benchmark-title">Time In Range (70–140)</div>
+        <div class="benchmark-val" style="color: #34D399;">{tir_percentage}%</div>
+    </div>
+    <div style="height: 28px; width: 1px; background: rgba(255,255,255,0.08);"></div>
+    <div class="benchmark-item">
+        <div class="benchmark-title">Fluktuasi GDS Terendah / Tertinggi</div>
+        <div class="benchmark-val" style="color: #E2E8F0;">{min_gds} <span style="color: #64748B;">—</span> {max_gds} <small style="font-size: 0.7rem;">mg/dL</small></div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-with col_chart:
-    st.markdown("### 📈 Timeline Korelasi (GDS, Insulin & Makanan)")
-    st.caption("Visualisasi sinkron interaksi kurva glukosa dengan waktu makan dan suntik insulin rapid.")
+# ==============================================================================
+# 🖥️ DESKTOP DUAL WORKSPACE (70% CHART / 30% STREAM)
+# ==============================================================================
+left_panel, right_panel = st.columns([7, 3])
+
+# --- LEFT PANEL: TIMELINE CHART & DATA INSPECTOR ---
+with left_panel:
+    st.markdown("### 📈 Visualisasi Korelasi Glukosa, Insulin & Makanan")
+    st.caption("Analisis sinkron terhadap kurva fluktuasi glukosa darah pasca asupan nutrisi dan injeksi insulin rapid.")
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    # Target zones
+    # Target Band Shapes (Green / Amber / Red)
     fig.add_hrect(
         y0=70, y1=140,
-        fillcolor="#10B981", opacity=0.08, line_width=0,
-        annotation_text="🟢 Zona Ideal (70-140)", annotation_position="top left",
+        fillcolor="#10B981", opacity=0.07, line_width=0,
+        annotation_text="🟢 Zona Ideal (70–140 mg/dL)", annotation_position="top left",
         annotation_font=dict(color="#10B981", size=10),
         secondary_y=False
     )
     fig.add_hrect(
         y0=140, y1=200,
-        fillcolor="#F59E0B", opacity=0.08, line_width=0,
-        annotation_text="🟡 Zona Perhatian (140-200)", annotation_position="top left",
+        fillcolor="#F59E0B", opacity=0.07, line_width=0,
+        annotation_text="🟡 Zona Perhatian (140–200)", annotation_position="top left",
         annotation_font=dict(color="#F59E0B", size=10),
         secondary_y=False
     )
     fig.add_hrect(
         y0=200, y1=380,
-        fillcolor="#EF4444", opacity=0.08, line_width=0,
+        fillcolor="#EF4444", opacity=0.07, line_width=0,
         annotation_text="🔴 Zona Waspada (>200)", annotation_position="top left",
         annotation_font=dict(color="#EF4444", size=10),
         secondary_y=False
     )
 
-    # 1. GDS Curve (Left Axis)
+    # 1. GDS Line (Axis Kiri)
     if not df_gds_filtered.empty:
         df_gds_sorted = df_gds_filtered.copy().sort_values(by=["tanggal", "waktu"])
         df_gds_sorted["timestamp"] = df_gds_sorted["tanggal"].astype(str) + " " + df_gds_sorted["waktu"].astype(str)
@@ -453,16 +628,16 @@ with col_chart:
                 y=df_gds_sorted["nilai_mg_dl"],
                 mode="lines+markers+text",
                 name="Gula Darah (mg/dL)",
-                text=[f"<b>{v}</b>" for v in df_gds_sorted["nilai_mg_dl"]],
+                text=[f"<b>{int(v)}</b>" for v in df_gds_sorted["nilai_mg_dl"]],
                 textposition="top center",
-                line=dict(color="#EF4444", width=3, shape="spline"),
-                marker=dict(size=11, symbol="diamond", color="#EF4444", line=dict(width=2, color="#FFFFFF")),
+                line=dict(color="#F43F5E", width=3, shape="spline"),
+                marker=dict(size=12, symbol="diamond", color="#F43F5E", line=dict(width=2, color="#FFFFFF")),
                 hovertemplate="<b>Waktu:</b> %{x}<br><b>GDS:</b> %{y} mg/dL<extra></extra>"
             ),
             secondary_y=False
         )
 
-    # 2. Insulin Bar (Right Axis)
+    # 2. Insulin Bars (Axis Kanan)
     if not df_meds_filtered.empty:
         df_ins = df_meds_filtered[df_meds_filtered["kategori"] == "Insulin"].copy().sort_values(by=["tanggal", "waktu"])
         if not df_ins.empty:
@@ -476,35 +651,35 @@ with col_chart:
                     textposition="outside",
                     marker_color="#38BDF8",
                     opacity=0.85,
-                    width=0.25,
+                    width=0.22,
                     hovertemplate="<b>Waktu:</b> %{x}<br><b>Dosis:</b> %{y} Unit<extra></extra>"
                 ),
                 secondary_y=True
             )
 
-    # 3. Pin Marker Makanan
+    # 3. Sesi Makan Pin Markers
     if not df_food_filtered.empty:
         df_food_sorted = df_food_filtered.copy().sort_values(by=["tanggal", "waktu"])
         df_food_sorted["timestamp"] = df_food_sorted["tanggal"].astype(str) + " " + df_food_sorted["waktu"].astype(str)
         fig.add_trace(
             go.Scatter(
                 x=df_food_sorted["timestamp"],
-                y=[110] * len(df_food_sorted),
+                y=[115] * len(df_food_sorted),
                 mode="markers+text",
                 name="Sesi Makan",
                 text=[f"🍽️ {m} ({p})" for m, p in zip(df_food_sorted["menu"], df_food_sorted["porsi"])],
                 textposition="bottom center",
-                marker=dict(size=14, color="#10B981", symbol="circle", line=dict(width=2, color="#FFFFFF")),
+                marker=dict(size=15, color="#10B981", symbol="circle", line=dict(width=2, color="#FFFFFF")),
                 hovertemplate="<b>Waktu:</b> %{x}<br><b>Menu:</b> %{text}<extra></extra>"
             ),
             secondary_y=False
         )
 
-    # Layout styling with Dark Slate Palette
+    # Desktop Chart Styling
     fig.update_layout(
-        plot_bgcolor="rgba(15, 23, 42, 0.4)",
+        plot_bgcolor="rgba(15, 23, 42, 0.45)",
         paper_bgcolor="rgba(0, 0, 0, 0)",
-        xaxis_title="Linimasa Waktu",
+        xaxis_title="Linimasa Kronologis",
         legend=dict(
             orientation="h",
             yanchor="bottom",
@@ -513,8 +688,8 @@ with col_chart:
             x=1,
             font=dict(color="#94A3B8", size=11)
         ),
-        margin=dict(l=20, r=20, t=35, b=30),
-        height=510,
+        margin=dict(l=20, r=20, t=35, b=25),
+        height=520,
         hovermode="x unified"
     )
     fig.update_xaxes(showgrid=True, gridcolor="rgba(255, 255, 255, 0.05)", color="#94A3B8")
@@ -523,11 +698,11 @@ with col_chart:
         range=[40, 320],
         showgrid=True,
         gridcolor="rgba(255, 255, 255, 0.05)",
-        color="#EF4444",
+        color="#F43F5E",
         secondary_y=False
     )
     fig.update_yaxes(
-        title_text="Dosis Insulin (Unit)",
+        title_text="Dosis Insulin Rapid (Unit)",
         range=[0, 45],
         showgrid=False,
         color="#38BDF8",
@@ -536,232 +711,165 @@ with col_chart:
 
     st.plotly_chart(fig, width="stretch")
 
-with col_stream:
-    st.markdown("### ⚡ Live Activity Stream")
-    st.caption("Aktivitas klinis & nutrisi terdata terkini.")
+    # --- TABEL RIWAYAT LENGKAP (POSTGRESQL CLOUD) ---
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("### 📋 Log Riwayat Data Lengkap")
+    t_gds, t_meds, t_food, t_sport = st.tabs([
+        f"🩸 Gula Darah ({len(df_gds)})",
+        f"💊 Obat & Insulin ({len(df_meds)})",
+        f"🍽️ Nutrisi & Makanan ({len(df_food)})",
+        f"🏃 Latihan Olahraga ({len(df_sport)})"
+    ])
+
+    with t_gds:
+        st.dataframe(df_gds, width="stretch")
+
+    with t_meds:
+        st.dataframe(df_meds, width="stretch")
+
+    with t_food:
+        st.dataframe(df_food, width="stretch")
+
+    with t_sport:
+        st.dataframe(df_sport, width="stretch")
+
+
+# --- RIGHT PANEL: LIVE ACTIVITY FEED & QUICK ENTRY ---
+with right_panel:
+    st.markdown("### ⚡ Live Activity Feed")
+    st.caption("Aktivitas klinis dan nutrisi terdata secara berurutan.")
+
+    # Feed filter tabs
+    filter_feed = st.radio(
+        "Kategori Feed",
+        ["Semua", "🩸 GDS", "💉 Insulin", "🍽️ Makan"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
     events = []
-    for _, r in df_gds.iterrows():
-        events.append({
-            "ts": f"{r['tanggal']} {r['waktu']}",
-            "color": "#EF4444",
-            "icon": "🩸",
-            "title": f"GDS: <b>{r['nilai_mg_dl']} mg/dL</b>",
-            "badge": r['tipe'],
-            "note": r['catatan'] or "Pengukuran gula darah"
-        })
-    for _, r in df_meds.iterrows():
-        is_ins = r["kategori"] == "Insulin"
-        events.append({
-            "ts": f"{r['tanggal']} {r['waktu']}",
-            "color": "#38BDF8" if is_ins else "#C084FC",
-            "icon": "💉" if is_ins else "💊",
-            "title": f"{r['kategori']}: <b>{r['nama']}</b> ({int(r['dosis_jumlah'])} {r['satuan']})",
-            "badge": "Insulin Rapid" if is_ins else r["kategori"],
-            "note": r['catatan'] or ("Injeksi dosis" if is_ins else "Konsumsi obat/vitamin")
-        })
-    for _, r in df_food.iterrows():
-        events.append({
-            "ts": f"{r['tanggal']} {r['waktu']}",
-            "color": "#10B981",
-            "icon": "🍽️",
-            "title": f"Makan: <b>{r['menu']}</b>",
-            "badge": f"{r['porsi']}",
-            "note": f"Est. {r['estimasi_kalori_kkal']} kkal • {r['catatan']}"
-        })
-    for _, r in df_sport.iterrows():
-        events.append({
-            "ts": f"{r['tanggal']} {r['waktu']}",
-            "color": "#F59E0B",
-            "icon": "🏃",
-            "title": f"Olahraga: <b>{r['jenis']}</b>",
-            "badge": f"{r['durasi_menit']} mnt",
-            "note": f"{r['jarak_km']} km • {r['catatan']}"
-        })
+    if filter_feed in ["Semua", "🩸 GDS"]:
+        for _, r in df_gds.iterrows():
+            events.append({
+                "ts": f"{r['tanggal']} {str(r['waktu'])[:5]}",
+                "color": "#F43F5E",
+                "icon": "🩸",
+                "title": f"GDS: <b>{r['nilai_mg_dl']} mg/dL</b>",
+                "badge": r['tipe'],
+                "note": r['catatan'] or "Pengukuran gula darah rutin"
+            })
+    if filter_feed in ["Semua", "💉 Insulin"]:
+        for _, r in df_meds.iterrows():
+            is_ins = r["kategori"] == "Insulin"
+            events.append({
+                "ts": f"{r['tanggal']} {str(r['waktu'])[:5]}",
+                "color": "#38BDF8" if is_ins else "#C084FC",
+                "icon": "💉" if is_ins else "💊",
+                "title": f"{r['kategori']}: <b>{r['nama']}</b> ({int(r['dosis_jumlah'])} {r['satuan']})",
+                "badge": "Insulin Rapid" if is_ins else r["kategori"],
+                "note": r['catatan'] or ("Suntik dosis insulin" if is_ins else "Konsumsi obat/vitamin")
+            })
+    if filter_feed in ["Semua", "🍽️ Makan"]:
+        for _, r in df_food.iterrows():
+            events.append({
+                "ts": f"{r['tanggal']} {str(r['waktu'])[:5]}",
+                "color": "#10B981",
+                "icon": "🍽️",
+                "title": f"Makan: <b>{r['menu']}</b>",
+                "badge": f"{r['porsi']}",
+                "note": f"Est. {r['estimasi_kalori_kkal']} kkal • {r['catatan']}"
+            })
+    if filter_feed == "Semua":
+        for _, r in df_sport.iterrows():
+            events.append({
+                "ts": f"{r['tanggal']} {str(r['waktu'])[:5]}",
+                "color": "#F59E0B",
+                "icon": "🏃",
+                "title": f"Olahraga: <b>{r['jenis']}</b>",
+                "badge": f"{r['durasi_menit']} mnt",
+                "note": f"{r['jarak_km']} km • {r['catatan']}"
+            })
 
     events_sorted = sorted(events, key=lambda x: str(x["ts"]), reverse=True)
 
-    stream_container = st.container(height=490)
+    stream_container = st.container(height=480)
     with stream_container:
         if events_sorted:
-            for ev in events_sorted[:15]:
+            for ev in events_sorted[:16]:
                 st.markdown(f"""
-                <div class="stream-item" style="border-left-color: {ev['color']};">
-                    <div class="stream-header">
-                        <span class="stream-time">🕒 {ev['ts']}</span>
-                        <span style="font-size: 0.75rem; color: {ev['color']}; font-weight: 600;">{ev['badge']}</span>
+                <div class="feed-item" style="border-left-color: {ev['color']};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="color: #94A3B8; font-size: 0.76rem; font-family: 'JetBrains Mono', monospace;">🕒 {ev['ts']}</span>
+                        <span style="font-size: 0.72rem; color: {ev['color']}; font-weight: 700; text-transform: uppercase;">{ev['badge']}</span>
                     </div>
-                    <div class="stream-body">{ev['icon']} {ev['title']}</div>
-                    <div class="stream-note">{ev['note']}</div>
+                    <div style="color: #F8FAFC; font-size: 0.9rem; font-weight: 600;">{ev['icon']} {ev['title']}</div>
+                    <div style="color: #64748B; font-size: 0.78rem; margin-top: 2px;">{ev['note']}</div>
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.info("Belum ada linimasa aktivitas.")
+            st.info("Belum ada data untuk kategori ini.")
 
-# ==========================================
-# 🛠️ INPUT MANUAL CADANGAN
-# ==========================================
-st.markdown("---")
-with st.expander("📝 Formulir Entri Data Cepat (Neon PostgreSQL)", expanded=False):
-    st.caption("Input langsung ke database cloud jika tidak melalui bot Telegram.")
-    tab_gds, tab_meds, tab_food, tab_sport = st.tabs(["🩸 Gula Darah", "💊 Obat / Insulin", "🍽️ Makanan", "🏃 Olahraga"])
+    # --- QUICK DESKTOP INPUT DRAWER ---
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("➕ Entri Data Cepat (Input Manual)", expanded=False):
+        in_tab1, in_tab2, in_tab3 = st.tabs(["🩸 GDS", "💉 Insulin", "🍽️ Makan"])
 
-    # 1. GDS Form
-    with tab_gds:
-        with st.form("form_add_gds", clear_on_submit=True):
-            cg1, cg2, cg3 = st.columns(3)
-            with cg1:
-                f_tgl = st.date_input("Tanggal", today, key="in_gds_tgl")
-            with cg2:
-                f_wkt = st.time_input("Waktu", datetime.now().time(), key="in_gds_wkt")
-            with cg3:
-                f_tipe = st.selectbox("Tipe Pengukuran", ["GDP (Puasa)", "GDS (Sewaktu)", "2 Jam Setelah Makan", "Sebelum Tidur"])
-            
-            cg4, cg5 = st.columns([1, 2])
-            with cg4:
-                f_nilai = st.number_input("Nilai GDS (mg/dL)", min_value=20, max_value=800, value=120)
-            with cg5:
-                f_cat = st.text_input("Catatan", placeholder="Kondisi fisik, keluhan, dll.")
-
-            if st.form_submit_button("Simpan Data Gula Darah 💾", width="stretch"):
-                try:
+        with in_tab1:
+            with st.form("quick_gds", clear_on_submit=True):
+                q_tgl = st.date_input("Tanggal", today, key="q_gds_tgl")
+                q_wkt = st.time_input("Waktu", datetime.now().time(), key="q_gds_wkt")
+                q_tipe = st.selectbox("Tipe", ["GDP (Puasa)", "GDS (Sewaktu)", "2 Jam Setelah Makan", "Sebelum Tidur"], key="q_gds_tipe")
+                q_val = st.number_input("Nilai (mg/dL)", min_value=20, max_value=800, value=120, key="q_gds_val")
+                q_cat = st.text_input("Catatan", key="q_gds_cat")
+                if st.form_submit_button("Simpan GDS", width="stretch"):
                     conn = get_connection()
                     cur = conn.cursor()
                     cur.execute(
                         "INSERT INTO gula_darah (tanggal, waktu, tipe, nilai_mg_dl, catatan) VALUES (%s, %s, %s, %s, %s)",
-                        (f_tgl, f_wkt.strftime("%H:%M"), f_tipe, f_nilai, f_cat)
+                        (q_tgl, q_wkt.strftime("%H:%M"), q_tipe, q_val, q_cat)
                     )
                     conn.commit()
                     conn.close()
                     st.cache_data.clear()
-                    st.success("✅ Data GDS berhasil disimpan ke Neon Cloud!")
+                    st.success("✅ GDS tersimpan!")
                     st.rerun()
-                except Exception as e:
-                    st.error(f"Gagal menyimpan: {e}")
 
-    # 2. Meds Form
-    with tab_meds:
-        with st.form("form_add_meds", clear_on_submit=True):
-            cm1, cm2, cm3 = st.columns(3)
-            with cm1:
-                fm_tgl = st.date_input("Tanggal", today, key="in_meds_tgl")
-            with cm2:
-                fm_wkt = st.time_input("Waktu", datetime.now().time(), key="in_meds_wkt")
-            with cm3:
-                fm_kat = st.selectbox("Kategori", ["Insulin", "Obat", "Vitamin"])
-            
-            cm4, cm5, cm6 = st.columns(3)
-            with cm4:
-                fm_nama = st.text_input("Nama Obat / Insulin", value="Insulin Rapid")
-            with cm5:
-                fm_dosis = st.number_input("Dosis", min_value=0.5, max_value=250.0, value=26.0, step=1.0)
-            with cm6:
-                fm_satuan = st.selectbox("Satuan", ["unit", "tablet", "kapsul"])
-            
-            fm_cat = st.text_input("Catatan Obat", placeholder="Sebelum makan / sesudah makan")
-
-            if st.form_submit_button("Simpan Data Obat / Insulin 💾", width="stretch"):
-                try:
+        with in_tab2:
+            with st.form("quick_ins", clear_on_submit=True):
+                qi_tgl = st.date_input("Tanggal", today, key="qi_tgl")
+                qi_wkt = st.time_input("Waktu", datetime.now().time(), key="qi_wkt")
+                qi_nama = st.text_input("Nama", value="Insulin Rapid", key="qi_nama")
+                qi_dose = st.number_input("Dosis (Unit)", min_value=1.0, max_value=100.0, value=26.0, step=1.0, key="qi_dose")
+                qi_cat = st.text_input("Catatan", key="qi_cat")
+                if st.form_submit_button("Simpan Insulin", width="stretch"):
                     conn = get_connection()
                     cur = conn.cursor()
                     cur.execute(
                         "INSERT INTO obat_insulin (tanggal, waktu, kategori, nama, dosis_jumlah, satuan, catatan) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                        (fm_tgl, fm_wkt.strftime("%H:%M"), fm_kat, fm_nama, fm_dosis, fm_satuan, fm_cat)
+                        (qi_tgl, qi_wkt.strftime("%H:%M"), "Insulin", qi_nama, qi_dose, "unit", qi_cat)
                     )
                     conn.commit()
                     conn.close()
                     st.cache_data.clear()
-                    st.success("✅ Data Obat/Insulin tersimpan!")
+                    st.success("✅ Insulin tersimpan!")
                     st.rerun()
-                except Exception as e:
-                    st.error(f"Gagal menyimpan: {e}")
 
-    # 3. Food Form
-    with tab_food:
-        with st.form("form_add_food", clear_on_submit=True):
-            cf1, cf2 = st.columns(2)
-            with cf1:
-                ff_tgl = st.date_input("Tanggal", today, key="in_food_tgl")
-                ff_menu = st.text_input("Menu Makanan", placeholder="Contoh: Dada Ayam Panggang, Nasi Merah")
-            with cf2:
-                ff_wkt = st.time_input("Waktu", datetime.now().time(), key="in_food_wkt")
-                ff_porsi = st.text_input("Porsi", value="1 porsi")
-            
-            cf3, cf4 = st.columns(2)
-            with cf3:
-                ff_kal = st.text_input("Estimasi Kalori (kkal)", value="350")
-            with cf4:
-                ff_cat = st.text_input("Catatan Makanan", placeholder="Rendah garam, tanpa gula")
-
-            if st.form_submit_button("Simpan Data Makanan 💾", width="stretch"):
-                try:
+        with in_tab3:
+            with st.form("quick_food", clear_on_submit=True):
+                qf_tgl = st.date_input("Tanggal", today, key="qf_tgl")
+                qf_wkt = st.time_input("Waktu", datetime.now().time(), key="qf_wkt")
+                qf_menu = st.text_input("Menu", placeholder="e.g. Ayam Rebus, Nasi Merah", key="qf_menu")
+                qf_por = st.text_input("Porsi", value="1 porsi", key="qf_por")
+                qf_kal = st.text_input("Estimasi Kalori (kkal)", value="350", key="qf_kal")
+                if st.form_submit_button("Simpan Makan", width="stretch"):
                     conn = get_connection()
                     cur = conn.cursor()
                     cur.execute(
                         "INSERT INTO makanan (tanggal, waktu, menu, porsi, estimasi_kalori_kkal, catatan) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (ff_tgl, ff_wkt.strftime("%H:%M"), ff_menu, ff_porsi, ff_kal, ff_cat)
+                        (qf_tgl, qf_wkt.strftime("%H:%M"), qf_menu, qf_por, qf_kal, "")
                     )
                     conn.commit()
                     conn.close()
                     st.cache_data.clear()
-                    st.success("✅ Data Nutrisi tersimpan!")
+                    st.success("✅ Makanan tersimpan!")
                     st.rerun()
-                except Exception as e:
-                    st.error(f"Gagal menyimpan: {e}")
-
-    # 4. Sport Form
-    with tab_sport:
-        with st.form("form_add_sport", clear_on_submit=True):
-            cs1, cs2 = st.columns(2)
-            with cs1:
-                fs_tgl = st.date_input("Tanggal", today, key="in_sport_tgl")
-                fs_jenis = st.text_input("Jenis Latihan", value="Jalan Santai Pagi")
-            with cs2:
-                fs_wkt = st.time_input("Waktu", datetime.now().time(), key="in_sport_wkt")
-                fs_durasi = st.number_input("Durasi (Menit)", min_value=1, max_value=360, value=30)
-
-            cs3, cs4 = st.columns(2)
-            with cs3:
-                fs_jarak = st.number_input("Jarak Tempuh (km)", min_value=0.0, max_value=50.0, value=2.0, step=0.1)
-            with cs4:
-                fs_cat = st.text_input("Catatan Latihan", placeholder="Kondisi detak jantung, rute")
-
-            if st.form_submit_button("Simpan Data Olahraga 💾", width="stretch"):
-                try:
-                    conn = get_connection()
-                    cur = conn.cursor()
-                    cur.execute(
-                        "INSERT INTO olahraga (tanggal, waktu, jenis, durasi_menit, jarak_km, catatan) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (fs_tgl, fs_wkt.strftime("%H:%M"), fs_jenis, fs_durasi, fs_jarak, fs_cat)
-                    )
-                    conn.commit()
-                    conn.close()
-                    st.cache_data.clear()
-                    st.success("✅ Data Olahraga tersimpan!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Gagal menyimpan: {e}")
-
-# ==========================================
-# 📋 HISTORICAL DATA TABLES
-# ==========================================
-st.markdown("---")
-st.markdown("### 📋 Log Riwayat Lengkap (Neon PostgreSQL Cloud)")
-tab_dt_gds, tab_dt_meds, tab_dt_food, tab_dt_sport = st.tabs([
-    f"Log Gula Darah ({len(df_gds)})",
-    f"Log Obat & Insulin ({len(df_meds)})",
-    f"Log Makanan ({len(df_food)})",
-    f"Log Olahraga ({len(df_sport)})"
-])
-
-with tab_dt_gds:
-    st.dataframe(df_gds, width="stretch")
-
-with tab_dt_meds:
-    st.dataframe(df_meds, width="stretch")
-
-with tab_dt_food:
-    st.dataframe(df_food, width="stretch")
-
-with tab_dt_sport:
-    st.dataframe(df_sport, width="stretch")
