@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import psycopg2
@@ -8,8 +9,38 @@ from datetime import datetime, date
 
 st.set_page_config(page_title="Dashboard Kesehatan Om Stan", layout="wide", page_icon="🩺")
 
-# DB Connection
+# DB Connection (Prioritaskan Neon Cloud / DATABASE_URL)
 def get_connection():
+    # 1. Cek dari environment
+    db_url = os.environ.get("DATABASE_URL")
+    
+    # 2. Cek Streamlit secrets jika ada
+    if not db_url:
+        try:
+            if hasattr(st, "secrets") and "DATABASE_URL" in st.secrets:
+                db_url = st.secrets["DATABASE_URL"]
+        except Exception:
+            pass
+
+    # 3. Cek file .env.local atau .env jika belum ada di env
+    if not db_url:
+        for fname in [".env.local", ".env"]:
+            env_path = os.path.join(os.path.dirname(__file__), fname)
+            if os.path.exists(env_path):
+                with open(env_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line.startswith("DATABASE_URL="):
+                            db_url = line.split("=", 1)[1].strip().strip('"').strip("'")
+                            break
+            if db_url:
+                break
+
+    # 4. Konek ke Neon Cloud jika URL tersedia
+    if db_url:
+        return psycopg2.connect(db_url)
+
+    # 5. Fallback ke DB Lokal jika tidak ada Neon URL
     return psycopg2.connect(
         host="127.0.0.1",
         port=5432,
@@ -18,11 +49,16 @@ def get_connection():
         dbname="kesehatan_db"
     )
 
+@st.cache_data(ttl=5)
 def load_data(table_name):
-    conn = get_connection()
-    df = pd.read_sql_query(f"SELECT * FROM {table_name} ORDER BY tanggal DESC, waktu DESC;", conn)
-    conn.close()
-    return df
+    try:
+        conn = get_connection()
+        df = pd.read_sql_query(f"SELECT * FROM {table_name} ORDER BY tanggal DESC, waktu DESC;", conn)
+        conn.close()
+        return df
+    except Exception as e:
+        st.error(f"Gagal memuat data `{table_name}`: {e}")
+        return pd.DataFrame()
 
 st.title("🩺 Health & Lifestyle Dashboard — Om Stan")
 st.caption("Monitoring Gula Darah, Insulin, Makanan, & Obat Terintegrasi PostgreSQL")
@@ -143,7 +179,7 @@ with c_left:
     fig.update_yaxes(title_text="Gula Darah (mg/dL)", range=[40, 320], secondary_y=False)
     fig.update_yaxes(title_text="Dosis Insulin (Unit)", range=[0, 45], secondary_y=True)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 with c_right:
     st.subheader("⚡ Live Activity Stream")
@@ -284,13 +320,13 @@ st.subheader("📋 Data Riwayat (PostgreSQL)")
 t_gds, t_meds, t_food, t_sport = st.tabs(["Log Gula Darah", "Log Obat & Insulin", "Log Makanan", "Log Olahraga"])
 
 with t_gds:
-    st.dataframe(df_gds, use_container_width=True)
+    st.dataframe(df_gds, width="stretch")
 
 with t_meds:
-    st.dataframe(df_meds, use_container_width=True)
+    st.dataframe(df_meds, width="stretch")
 
 with t_food:
-    st.dataframe(df_food, use_container_width=True)
+    st.dataframe(df_food, width="stretch")
 
 with t_sport:
-    st.dataframe(df_sport, use_container_width=True)
+    st.dataframe(df_sport, width="stretch")
