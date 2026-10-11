@@ -344,13 +344,23 @@ with left_panel:
         if not df_food_filtered.empty:
             df_food_sorted = df_food_filtered.copy().sort_values(by=["tanggal", "waktu"])
             df_food_sorted["timestamp"] = df_food_sorted["tanggal"].astype(str) + " " + df_food_sorted["waktu"].astype(str)
+            meal_texts = []
+            for m, p in zip(df_food_sorted["menu"], df_food_sorted["porsi"]):
+                p_str = str(p or "").strip()
+                if p_str:
+                    items = [it.strip() for it in p_str.split(",") if it.strip()]
+                    formatted_p = ",<br>".join(items)
+                    meal_texts.append(f"<b>{m}</b><br>{formatted_p}")
+                else:
+                    meal_texts.append(f"<b>{m}</b>")
+
             fig.add_trace(
                 go.Scatter(
                     x=df_food_sorted["timestamp"],
                     y=[115] * len(df_food_sorted),
                     mode="markers+text",
                     name="Sesi makan",
-                    text=[f"{m} ({p})" for m, p in zip(df_food_sorted["menu"], df_food_sorted["porsi"])],
+                    text=meal_texts,
                     textposition="bottom center",
                     textfont=dict(color="#34D399", size=9, family="Inter"),
                     marker=dict(size=12, color="#34D399", symbol="circle", line=dict(width=1.5, color="#0F172A")),
@@ -421,16 +431,77 @@ with left_panel:
         ])
 
         with t_gds:
-            st.dataframe(df_gds, width="stretch", hide_index=True, alt="Riwayat gula darah")
+            cols_gds = [c for c in ["tanggal", "waktu", "tipe", "nilai_mg_dl", "catatan"] if c in df_gds.columns]
+            st.dataframe(
+                df_gds[cols_gds] if cols_gds else df_gds,
+                column_config={
+                    "tanggal": st.column_config.DateColumn("Tanggal"),
+                    "waktu": st.column_config.TimeColumn("Waktu"),
+                    "tipe": st.column_config.TextColumn("Tipe"),
+                    "nilai_mg_dl": st.column_config.NumberColumn("GDS (mg/dL)"),
+                    "catatan": st.column_config.TextColumn("Catatan", width="medium"),
+                },
+                width="stretch",
+                hide_index=True,
+                alt="Riwayat gula darah",
+            )
 
         with t_meds:
-            st.dataframe(df_meds, width="stretch", hide_index=True, alt="Riwayat obat dan insulin")
+            cols_meds = [c for c in ["tanggal", "waktu", "kategori", "nama", "dosis_jumlah", "satuan", "catatan"] if c in df_meds.columns]
+            st.dataframe(
+                df_meds[cols_meds] if cols_meds else df_meds,
+                column_config={
+                    "tanggal": st.column_config.DateColumn("Tanggal"),
+                    "waktu": st.column_config.TimeColumn("Waktu"),
+                    "kategori": st.column_config.TextColumn("Kategori"),
+                    "nama": st.column_config.TextColumn("Nama"),
+                    "dosis_jumlah": st.column_config.NumberColumn("Dosis"),
+                    "satuan": st.column_config.TextColumn("Satuan"),
+                    "catatan": st.column_config.TextColumn("Catatan", width="medium"),
+                },
+                width="stretch",
+                hide_index=True,
+                alt="Riwayat obat dan insulin",
+            )
 
         with t_food:
-            st.dataframe(df_food, width="stretch", hide_index=True, alt="Riwayat asupan makanan")
+            df_food_display = df_food.copy()
+            if not df_food_display.empty and "porsi" in df_food_display.columns:
+                df_food_display["porsi"] = df_food_display["porsi"].apply(
+                    lambda x: ",\n".join([i.strip() for i in str(x).split(",") if i.strip()]) if pd.notna(x) else ""
+                )
+            cols_food = [c for c in ["tanggal", "waktu", "menu", "porsi", "estimasi_kalori_kkal", "catatan"] if c in df_food_display.columns]
+            st.dataframe(
+                df_food_display[cols_food] if cols_food else df_food_display,
+                column_config={
+                    "tanggal": st.column_config.DateColumn("Tanggal"),
+                    "waktu": st.column_config.TimeColumn("Waktu"),
+                    "menu": st.column_config.TextColumn("Menu", width="medium"),
+                    "porsi": st.column_config.TextColumn("Rincian / Porsi", width="large"),
+                    "estimasi_kalori_kkal": st.column_config.TextColumn("Kalori (kkal)", width="small"),
+                    "catatan": st.column_config.TextColumn("Catatan", width="medium"),
+                },
+                width="stretch",
+                hide_index=True,
+                alt="Riwayat asupan makanan",
+            )
 
         with t_sport:
-            st.dataframe(df_sport, width="stretch", hide_index=True, alt="Riwayat olahraga")
+            cols_sport = [c for c in ["tanggal", "waktu", "jenis", "durasi_menit", "jarak_km", "catatan"] if c in df_sport.columns]
+            st.dataframe(
+                df_sport[cols_sport] if cols_sport else df_sport,
+                column_config={
+                    "tanggal": st.column_config.DateColumn("Tanggal"),
+                    "waktu": st.column_config.TimeColumn("Waktu"),
+                    "jenis": st.column_config.TextColumn("Jenis"),
+                    "durasi_menit": st.column_config.NumberColumn("Durasi (mnt)"),
+                    "jarak_km": st.column_config.NumberColumn("Jarak (km)"),
+                    "catatan": st.column_config.TextColumn("Catatan", width="medium"),
+                },
+                width="stretch",
+                hide_index=True,
+                alt="Riwayat olahraga",
+            )
 
 
 # Activity feed (right panel)
@@ -470,13 +541,15 @@ with right_panel:
                 })
         if filter_feed in ["Semua", "Makan"]:
             for _, r in df_food.iterrows():
+                p_items = [i.strip() for i in str(r["porsi"]).split(",") if i.strip()] if r["porsi"] else []
                 events.append({
                     "ts": f"{r['tanggal']} {str(r['waktu'])[:5]}",
                     "icon": ":material/restaurant:",
                     "title": f"Makan: **{r['menu']}**",
-                    "badge_text": f"{r['porsi']}",
+                    "badge_text": f"{len(p_items)} item" if len(p_items) > 1 else (p_items[0] if p_items else "Nutrisi"),
                     "badge_color": "green",
-                    "note": f"Est. {r['estimasi_kalori_kkal']} kkal — {r['catatan']}",
+                    "porsi_items": p_items,
+                    "note": f"Est. {r['estimasi_kalori_kkal']} kkal — {r['catatan']}" if r["catatan"] else f"Est. {r['estimasi_kalori_kkal']} kkal",
                 })
         if filter_feed == "Semua":
             for _, r in df_sport.iterrows():
@@ -486,6 +559,7 @@ with right_panel:
                     "title": f"Olahraga: **{r['jenis']}**",
                     "badge_text": f"{r['durasi_menit']} mnt",
                     "badge_color": "orange",
+                    "porsi_items": [],
                     "note": f"{r['jarak_km']} km — {r['catatan']}",
                 })
 
@@ -499,6 +573,9 @@ with right_panel:
                         st.caption(f":material/schedule: {ev['ts']}")
                         st.markdown(f"{ev['title']}")
                         st.badge(ev["badge_text"], color=ev["badge_color"])
+                        if ev.get("porsi_items"):
+                            rincian_lines = ",\n".join(ev["porsi_items"])
+                            st.caption(f"**Rincian:**\n{rincian_lines}")
                         st.caption(ev["note"])
             else:
                 st.info("Belum ada data untuk kategori ini.", icon=":material/info:")
