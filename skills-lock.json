@@ -535,6 +535,12 @@
       "skillPath": "skills/neon-postgres-egress-optimizer/SKILL.md",
       "computedHash": "d08a9a558f8236e1403a5ef2221ef4c0d075166a246a83d730493a7fe377ae46"
     },
+    "no-ai-slop": {
+      "source": "petergyang/no-ai-slop",
+      "sourceType": "github",
+      "skillPath": "skills/no-ai-slop/SKILL.md",
+      "computedHash": "109e265d222da64314b5f08634e4c4ab91051c81eff92d52beea8f3cd81ddb3d"
+    },
     "north-star-vision": {
       "source": "Owl-Listener/designer-skills",
       "sourceType": "github",
