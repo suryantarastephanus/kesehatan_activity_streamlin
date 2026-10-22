@@ -1,5 +1,6 @@
 import os
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
+from zoneinfo import ZoneInfo
 import pandas as pd
 import psycopg2
 import plotly.graph_objects as go
@@ -80,16 +81,10 @@ def get_connection():
     if not db_url and hasattr(st, "secrets") and "DATABASE_URL" in st.secrets:
         db_url = st.secrets["DATABASE_URL"]
 
-    if db_url:
-        return psycopg2.connect(db_url)
-
-    return psycopg2.connect(
-        host=os.environ.get("DB_HOST", "127.0.0.1"),
-        port=int(os.environ.get("DB_PORT", 5432)),
-        user=os.environ.get("DB_USER", "postgres"),
-        password=os.environ.get("DB_PASSWORD", "PGpass#2026"),
-        dbname=os.environ.get("DB_NAME", "kesehatan_db"),
-    )
+    conn = psycopg2.connect(db_url)
+    conn.cursor().execute("SET timezone = 'Asia/Jakarta'")
+    conn.commit()
+    return conn
 
 
 @st.cache_data(ttl=5)
@@ -139,7 +134,20 @@ df_meds = load_data("obat_insulin")
 df_food = load_data("makanan")
 df_sport = load_data("olahraga")
 
-today = date.today()
+WIB = ZoneInfo("Asia/Jakarta")  # Indonesia Barat (UTC+7) - sumber kebenaran tanggal
+
+
+def now_wib():
+    """Waktu sekarang dalam zona WIB, timezone-aware."""
+    return datetime.now(WIB)
+
+
+def today_wib():
+    """Tanggal hari ini dalam zona WIB."""
+    return now_wib().date()
+
+
+today = today_wib()
 
 
 def filter_dataframe_by_date(df, date_col="tanggal"):
@@ -588,7 +596,7 @@ with right_panel:
         with in_tab1:
             with st.form("quick_gds", clear_on_submit=True):
                 q_tgl = st.date_input("Tanggal", today, key="q_gds_tgl")
-                q_wkt = st.time_input("Waktu", datetime.now().time(), key="q_gds_wkt")
+                q_wkt = st.time_input("Waktu", now_wib().time(), key="q_gds_wkt")
                 q_tipe = st.selectbox("Tipe", ["GDP (Puasa)", "GDS (Sewaktu)", "2 Jam Setelah Makan", "Sebelum Tidur"], key="q_gds_tipe")
                 q_val = st.number_input("Nilai (mg/dL)", min_value=20, max_value=800, value=120, key="q_gds_val")
                 q_cat = st.text_input("Catatan", key="q_gds_cat")
@@ -608,7 +616,7 @@ with right_panel:
         with in_tab2:
             with st.form("quick_ins", clear_on_submit=True):
                 qi_tgl = st.date_input("Tanggal", today, key="qi_tgl")
-                qi_wkt = st.time_input("Waktu", datetime.now().time(), key="qi_wkt")
+                qi_wkt = st.time_input("Waktu", now_wib().time(), key="qi_wkt")
                 qi_nama = st.text_input("Nama", value="Insulin Rapid", key="qi_nama")
                 qi_dose = st.number_input("Dosis (unit)", min_value=1.0, max_value=100.0, value=26.0, step=1.0, key="qi_dose")
                 qi_cat = st.text_input("Catatan", key="qi_cat")
@@ -628,7 +636,7 @@ with right_panel:
         with in_tab3:
             with st.form("quick_food", clear_on_submit=True):
                 qf_tgl = st.date_input("Tanggal", today, key="qf_tgl")
-                qf_wkt = st.time_input("Waktu", datetime.now().time(), key="qf_wkt")
+                qf_wkt = st.time_input("Waktu", now_wib().time(), key="qf_wkt")
                 qf_menu = st.text_input("Menu", placeholder="Ayam rebus, nasi merah", key="qf_menu")
                 qf_por = st.text_input("Porsi", value="1 porsi", key="qf_por")
                 qf_kal = st.text_input("Estimasi kalori (kkal)", value="350", key="qf_kal")
