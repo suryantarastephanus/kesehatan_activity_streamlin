@@ -40,8 +40,12 @@ def check_pin_auth():
         return True
 
     valid_pin = os.environ.get("DASHBOARD_PIN", "1123")
-    if hasattr(st, "secrets") and "DASHBOARD_PIN" in st.secrets:
-        valid_pin = str(st.secrets["DASHBOARD_PIN"])
+    # st.secrets melempar exception bila file secrets.toml tidak ada - aman dengan try/except
+    try:
+        if "DASHBOARD_PIN" in st.secrets:
+            valid_pin = str(st.secrets["DASHBOARD_PIN"])
+    except Exception:
+        pass
 
     _, center_col, _ = st.columns([1, 1.2, 1])
     with center_col:
